@@ -65,7 +65,10 @@ namespace PokerPlayer
 
             return this.hand.Select(x => x.Rank).Distinct().Count() == 4;
         }
-
+        public bool HasTwoPair()
+        {
+            return this.hand.GroupBy(x => x.Rank).Where(x => x.Count() == 2).Count() == 2;
+        }
         public bool ThreeOfAKind()
         {
             //Grouping cards by rank. The Rank is then stored in the Key value
@@ -91,15 +94,30 @@ namespace PokerPlayer
 
 
             //return this
-            public bool RoyalFlush
+            public bool RoyalFlush()
             {
-               this.hand.Where(x=> x.)Select(x => x.Suit).Distinct().Count() == 1 && this.hand.OrderByDescending(x => x.First == Ace).Last == Ten);
-	{
-		 return true;
-	}
+                 return  this.hand.Select(x => x.Suit).Distinct().Count() == 1 && this.hand.Select(x =>x.Rank).Distinct().OrderBy(x =>x).Last()==Rank.Ace &&
+	            this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).Last() - this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).First() == 4;
                 
 
             }
+        public bool HasStraight()
+        {
+            return this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).Last() - this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).First() == 4;
+        }
+        public bool HasFullHouse()
+        {
+            //groups hand by rank and counts if there are two kinds of cards then seeing if any of them also have 3 of the same kind of card rank
+            return this.hand.GroupBy(x => x.Rank).Count() == 2 && this.hand.GroupBy(x => x.Rank).Any(x => x.Count() == 3);
+        }
+        public bool HasFourOfAKind()
+        {
+            return this.hand.GroupBy(x => x.Rank).Count() == 2 && this.hand.GroupBy(x => x.Rank).Any(x => x.Count() == 4);
+        }
+        public bool StraightFlush()
+        {
+            return this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).Last() - this.hand.Select(x => x.Rank).Distinct().OrderBy(x => x).First() == 4  && this.hand.Select(x => x.Suit).Distinct().Count() == 1;
+        }
 
     
     }
